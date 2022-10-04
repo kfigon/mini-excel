@@ -6,6 +6,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type mockReader func(string,int) (cell, bool)
+func (m mockReader) read(s string, i int) (cell, bool) {
+	return m(s,i)
+}
+func emptyMockReader() mockReader {
+	return func(s string, i int) (cell, bool) {
+		return nil, false
+	}
+}
+
 func TestEvaluateExpressionWithoutCoordinates(t *testing.T) {
 	testCases := []struct {
 		input 	 string
@@ -22,7 +32,7 @@ func TestEvaluateExpressionWithoutCoordinates(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {
-			got, err := newEvaluator().eval(expressionCell{tC.input})
+			got, err := newEvaluator(emptyMockReader()).eval(coordinate{}, expressionCell{tC.input})
 			assert.NoError(t, err)
 			assert.Equal(t, tC.expected, got)
 		})

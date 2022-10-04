@@ -1,10 +1,17 @@
 package main
 
-type evaluator struct{}
-func newEvaluator() *evaluator{
-	return &evaluator{}
+type reader interface{
+	read(string, int) (cell, bool)
 }
 
-func(e *evaluator) eval(exp expressionCell) (int, error) {
+type evaluator struct{
+	r reader
+}
+
+func newEvaluator(r reader) *evaluator{
+	return &evaluator{r: r}
+}
+
+func(e *evaluator) eval(currentCoord coordinate, exp expressionCell) (int, error) {
 	return -1, nil
 }
