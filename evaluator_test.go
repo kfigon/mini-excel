@@ -21,6 +21,7 @@ func TestEvaluateExpressionWithoutCoordinates(t *testing.T) {
 		input 	 string
 		expected int
 	}{
+		{"=2", 2},
 		{"=1+2", 3},
 		{"=32+13", 45},
 		{"=32-13", 19},
@@ -37,6 +38,26 @@ func TestEvaluateExpressionWithoutCoordinates(t *testing.T) {
 			assert.Equal(t, tC.expected, got)
 		})
 	}
+}
+
+func TestEvaluateInvalidExpressions(t *testing.T) {
+	testCases := []struct {
+		input 	 string
+	}{
+		{"="},
+		{"=+"},
+		{"+"},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.input, func(t *testing.T) {
+			_, err := newEvaluator(emptyMockReader()).eval(coordinate{}, expressionCell{tC.input})
+			assert.Error(t, err)
+		})
+	}
+}
+
+func TestNonExisingCoordinates(t *testing.T) {
+	t.Fatal("todo")
 }
 
 func TestEvaluateWithCoordinates(t *testing.T) {
