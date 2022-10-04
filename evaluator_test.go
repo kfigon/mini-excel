@@ -22,8 +22,17 @@ func TestEvaluateExpressionWithoutCoordinates(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {
-			got := newEvaluator().eval(expressionCell{tC.input})
+			got, err := newEvaluator().eval(expressionCell{tC.input})
+			assert.NoError(t, err)
 			assert.Equal(t, tC.expected, got)
 		})
 	}
+}
+
+func TestEvaluateWithCoordinates(t *testing.T) {
+	t.Fatal("todo")
+}
+
+func TestEvaluateExpressionsWithCyclicDependency(t *testing.T) {
+	t.Fatal("todo")
 }

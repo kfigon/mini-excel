@@ -5,6 +5,6 @@ func newEvaluator() *evaluator{
 	return &evaluator{}
 }
 
-func(e *evaluator) eval(exp expressionCell) int {
-	return -1
+func(e *evaluator) eval(exp expressionCell) (int, error) {
+	return -1, nil
 }
