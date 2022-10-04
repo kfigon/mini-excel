@@ -29,27 +29,27 @@ func TestParseSpreadsheet(t *testing.T) {
 	})
 
 	t.Run("elements", func(t *testing.T) {
-		assertPresent := func(row string, col int, exp cell) {
-			v, ok := ss.read(row, col)
-			assert.True(t, ok, fmt.Sprintf("expected el on %v%d but not found", row, col))
-			assert.Equal(t, exp, v, fmt.Sprintf("invalid value on %v%d", row, col))
+		assertPresent := func(id string, exp cell) {
+			v, ok := ss.read(id)
+			assert.True(t, ok, fmt.Sprintf("expected el on %v but not found", id))
+			assert.Equal(t, exp, v, fmt.Sprintf("invalid value on %v", id))
 		}
 
-		absent := func(row string, col int) {
-			_, ok := ss.read(row, col)
-			assert.False(t, ok, fmt.Sprintf("el on %v%d not expected but found", row, col))
+		absent := func(id string) {
+			_, ok := ss.read(id)
+			assert.False(t, ok, fmt.Sprintf("el on %v not expected but found", id))
 		}
-		assertPresent("A", 1, numberCell(1))
-		assertPresent("B", 1, numberCell(2))
-		absent("C", 1)
-		assertPresent("D", 1, numberCell(4))
-		assertPresent("E", 1, stringCell("asd"))
+		assertPresent("A1", numberCell(1))
+		assertPresent("B1",  numberCell(2))
+		absent("C1")
+		assertPresent("D1", numberCell(4))
+		assertPresent("E1", stringCell("asd"))
 
-		assertPresent("A", 2, expressionCell{"=A1+B1"})
-		absent("B", 2)
-		assertPresent("C", 2, numberCell(3))
-		assertPresent("D", 2, expressionCell{"=A2+C2"})
-		absent("E", 2)
+		assertPresent("A2", expressionCell{"=A1+B1"})
+		absent("B2")
+		assertPresent("C2", numberCell(3))
+		assertPresent("D2", expressionCell{"=A2+C2"})
+		absent("E2")
 	})
 }
 

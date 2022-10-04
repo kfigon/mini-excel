@@ -103,7 +103,13 @@ func parseCoords(in string) (coordinate, bool) {
 	return coordinate{row: str, col: num}, true
 }
 
-func (s spreadsheet) read(row string, col int) (cell, bool) {
+func (s spreadsheet) read(id string) (cell, bool) {
+	c, ok := parseCoords(id)
+	if !ok {
+		return nil, false
+	}
+	row := c.row
+	col := c.col
 	r, ok := s[row]
 	if !ok {
 		return nil, false

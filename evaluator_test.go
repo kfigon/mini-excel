@@ -6,12 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockReader func(string,int) (cell, bool)
-func (m mockReader) read(s string, i int) (cell, bool) {
-	return m(s,i)
+type mockReader func(string) (cell, bool)
+func (m mockReader) read(s string) (cell, bool) {
+	return m(s)
 }
 func emptyMockReader() mockReader {
-	return func(s string, i int) (cell, bool) {
+	return func(s string) (cell, bool) {
 		return nil, false
 	}
 }
@@ -33,7 +33,7 @@ func TestEvaluateExpressionWithoutCoordinates(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {
-			got, err := newEvaluator(emptyMockReader()).eval(coordinate{}, expressionCell{tC.input})
+			got, err := newEvaluator(emptyMockReader()).eval("", expressionCell{tC.input})
 			assert.NoError(t, err)
 			assert.Equal(t, tC.expected, got)
 		})
@@ -50,7 +50,7 @@ func TestEvaluateInvalidExpressions(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {
-			_, err := newEvaluator(emptyMockReader()).eval(coordinate{}, expressionCell{tC.input})
+			_, err := newEvaluator(emptyMockReader()).eval("", expressionCell{tC.input})
 			assert.Error(t, err)
 		})
 	}

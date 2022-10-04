@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 type reader interface {
-	read(string, int) (cell, bool)
+	read(string) (cell, bool)
 }
 
 type evaluator struct {
@@ -14,7 +14,7 @@ func newEvaluator(r reader) *evaluator {
 	return &evaluator{r: r}
 }
 
-func (e *evaluator) eval(currentCoord coordinate, exp expressionCell) (int, error) {
+func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 	tokens := parseExpression(exp)
 	if len(tokens) < 2 {
 		return -1, fmt.Errorf("invalid expression provided")
