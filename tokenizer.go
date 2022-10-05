@@ -76,3 +76,33 @@ func parseExpression(ex expressionCell) []token {
 
 	return out
 }
+
+
+type tokenIterator struct {
+	tokens []token
+	i int
+}
+
+func (t *tokenIterator) hasNext() bool {
+	return t.i < len(t.tokens)
+}
+
+func (t *tokenIterator) next() {
+	if t.hasNext() {
+		t.i++
+	}
+}
+
+func (t *tokenIterator) currentToken() (token, bool) {
+	if t.hasNext() {
+		return t.tokens[t.i], true
+	}
+	return token{}, false
+}
+
+func (t *tokenIterator) peek() (token, bool) {
+	if t.i+1 < len(t.tokens) {
+		return t.tokens[t.i+1], true
+	}
+	return token{}, false
+}
