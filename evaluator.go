@@ -39,7 +39,7 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 			lhs, ok := operandStack.pop()
 
 			if !ok {
-				break
+				return -1, fmt.Errorf("too few operands")
 			}
 			lVal, _ := strconv.Atoi(lhs.val)
 			rVal, _ := strconv.Atoi(rhs.val)
@@ -53,7 +53,7 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 			case multiply:
 				newToken.val = strconv.Itoa(lVal*rVal)
 			default:
-				break
+				return -1, fmt.Errorf("unknown operator: %v", cur)
 			}
 			operandStack.push(newToken)
 		}
@@ -67,5 +67,5 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 		return res, nil
 	}
 
-	return -1, fmt.Errorf("an error")
+	return -1, fmt.Errorf("unknown error")
 }

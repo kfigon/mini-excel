@@ -47,6 +47,9 @@ func TestEvaluateInvalidExpressions(t *testing.T) {
 		{"="},
 		{"=+"},
 		{"+"},
+		{"=+3"},
+		{"=3+"},
+		{`=3/5`},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {
