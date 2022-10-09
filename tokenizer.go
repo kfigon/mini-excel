@@ -31,6 +31,17 @@ func (t tokenType) String() string {
 		"coord"}[t]
 }
 
+func (t tokenType) predescence() int {
+	pres := map[tokenType]int {
+		closeParent: 3, // immidiate
+		multiply: 2, // */%
+		plus: 1,
+		minus: 1, // low
+		openParent: 0,
+	}
+	return pres[t]
+}
+
 func (t tokenType) isOperator() bool {
 	return t == plus || t == minus || t == multiply || t == equal || t == openParent || t == closeParent
 }
