@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 type reader interface {
 	read(string) (cell, bool)
@@ -16,7 +19,7 @@ func newEvaluator(r reader) *evaluator {
 
 // todo: shunting yard algorithm or recursive descent parser?
 func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
-	tokens := parseExpression(exp)
+	tokens := convertInfix(parseExpression(exp))
 	if len(tokens) < 2 {
 		return -1, fmt.Errorf("invalid expression provided")
 	}
@@ -24,8 +27,37 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 	iter := &tokenIterator{tokens: tokens}
 	iter.next() // =
 
+	operandStack := newStack[token]()
+
 	for iter.hasNext() {
-		iter.next()		
+		cur, _ := iter.currentToken()
+		
+		if cur.tokType.isOperand() {
+			operandStack.push(cur)
+		} else {
+			lhs, ok := operandStack.pop()
+			rhs, ok := operandStack.pop()
+
+			if !ok {
+				break
+			}
+			lVal, _ := strconv.Atoi(lhs.val)
+			rVal, _ := strconv.Atoi(rhs.val)
+			newToken := token{tokType: number}
+
+			switch cur.tokType {
+			case plus:
+				newToken.val = strconv.Itoa(lVal+rVal)
+			case minus:
+				newToken.val = strconv.Itoa(lVal-rVal)
+			case multiply:
+				newToken.val = strconv.Itoa(lVal*rVal)
+			default:
+				break
+			}
+		}
+
+		iter.next()
 	}
 	
 	return -1, nil
