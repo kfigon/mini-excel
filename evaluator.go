@@ -35,8 +35,8 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 		if cur.tokType.isOperand() {
 			operandStack.push(cur)
 		} else {
-			lhs, ok := operandStack.pop()
 			rhs, ok := operandStack.pop()
+			lhs, ok := operandStack.pop()
 
 			if !ok {
 				break
