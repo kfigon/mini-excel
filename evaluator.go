@@ -15,6 +15,7 @@ func newEvaluator(r reader) *evaluator {
 }
 
 // shunting yard algorithm
+// recursive descent parser
 func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 	tokens := parseExpression(exp)
 	if len(tokens) < 2 {
