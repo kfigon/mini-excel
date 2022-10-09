@@ -17,7 +17,7 @@ func newEvaluator(r reader) *evaluator {
 	return &evaluator{r: r}
 }
 
-// todo: shunting yard algorithm or recursive descent parser?
+// shunting yard algorithm
 func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 	tokens := convertInfix(parseExpression(exp))
 	if len(tokens) < 2 {
@@ -41,8 +41,15 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 			if !ok {
 				return -1, fmt.Errorf("too few operands")
 			}
-			lVal, _ := strconv.Atoi(lhs.val)
-			rVal, _ := strconv.Atoi(rhs.val)
+			
+			lVal, err := e.extract(lhs)
+			if err != nil {
+				return 0, err
+			}
+			rVal, err := e.extract(rhs)
+			if err != nil {
+				return 0, err
+			}
 			newToken := token{tokType: number}
 
 			switch cur.tokType {
@@ -63,9 +70,28 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 	
 	if len(operandStack.tab) == 1 {
 		v, _ := operandStack.pop()
-		res, _ := strconv.Atoi(v.val)
-		return res, nil
+		return e.extract(v)
 	}
 
 	return -1, fmt.Errorf("unknown error")
+}
+
+func (e *evaluator) extract(t token) (int, error) {
+	if t.tokType == number {
+		v, _ := strconv.Atoi(t.val)
+		return v, nil
+	} else if t.tokType == coord {
+		c, ok := e.r.read(t.val)
+		if !ok{
+			return 0, fmt.Errorf("can't extract value from coordinate: %v", t.val)
+		}
+
+		switch cell := c.(type) {
+		case numberCell: return int(cell), nil
+		default:
+			return 0, fmt.Errorf("can't read value from %v - unknown cell type", t)
+		}
+	}
+
+	return 0, fmt.Errorf("can't extract value from token %v", t)
 }

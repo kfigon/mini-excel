@@ -98,8 +98,9 @@ func TestEvaluateWithCoordinates(t *testing.T) {
 
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {
-			_, err := newEvaluator(mock).eval("", expressionCell{tC.input})
-			assert.Error(t, err)
+			got, err := newEvaluator(mock).eval("", expressionCell{tC.input})
+			assert.NoError(t, err)
+			assert.Equal(t, tC.exp, got)
 		})
 	}
 }
