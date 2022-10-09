@@ -60,11 +60,48 @@ func TestEvaluateInvalidExpressions(t *testing.T) {
 }
 
 func TestNonExisingCoordinates(t *testing.T) {
-	t.Fatal("todo")
+	testCases := []struct {
+		input 	 string
+	}{
+		{"=A1"},
+		{"=1 + A1"},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.input, func(t *testing.T) {
+			_, err := newEvaluator(emptyMockReader()).eval("", expressionCell{tC.input})
+			assert.Error(t, err)
+		})
+	}
 }
 
 func TestEvaluateWithCoordinates(t *testing.T) {
-	t.Fatal("todo")
+	testCases := []struct {
+		input 	 string
+		exp int
+	}{
+		{"=A1", 3},
+		{"=1 + A1", 4},
+		{"=B1 + A1*A2", 36},
+		{"=(B1 + A1)*A2", 90},
+		{"=C1", 45},
+	}
+
+	var mock mockReader = func(s string) (cell, bool) {
+		switch s{
+		case "A1": return numberCell(3), true
+		case "B1": return numberCell(6), true
+		case "A2": return numberCell(10), true
+		case "C1": return expressionCell{exp: "=32+13"}, true
+		}
+		return nil, false
+	}
+
+	for _, tC := range testCases {
+		t.Run(tC.input, func(t *testing.T) {
+			_, err := newEvaluator(mock).eval("", expressionCell{tC.input})
+			assert.Error(t, err)
+		})
+	}
 }
 
 func TestEvaluateExpressionsWithCyclicDependency(t *testing.T) {
