@@ -55,10 +55,17 @@ func (e *evaluator) eval(currentCoord string, exp expressionCell) (int, error) {
 			default:
 				break
 			}
+			operandStack.push(newToken)
 		}
 
 		iter.next()
 	}
 	
-	return -1, nil
+	if len(operandStack.tab) == 1 {
+		v, _ := operandStack.pop()
+		res, _ := strconv.Atoi(v.val)
+		return res, nil
+	}
+
+	return -1, fmt.Errorf("an error")
 }
