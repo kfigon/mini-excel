@@ -62,22 +62,23 @@ func convertInfix(tokens []token) []token {
 				top, ok := stak.peek()
 				if !ok || cur.tokType.predescence() > top.tokType.predescence(){
 					stak.push(cur)
-				} else {
-					for {
-						top, ok := stak.pop()
-						if !ok {
-							break
-						}
+					continue
+				}
+				
+				for {
+					top, ok := stak.pop()
+					if !ok {
+						break
+					}
 
-						if top.tokType.predescence() > cur.tokType.predescence() {
-							out = append(out, top)
-						} else {
-							stak.push(top) // get back that popped one
-							stak.push(cur)
-							break
-						}
+					if top.tokType.predescence() >= cur.tokType.predescence() {
+						out = append(out, top)
+					} else {
+						stak.push(top) // get back that popped one
+						break
 					}
 				}
+				stak.push(cur)
 			}
 		}
 	}
