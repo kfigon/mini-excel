@@ -24,3 +24,8 @@ A,B,C,D,E
 expressions are evaluated using modified shunting yard algorithm
 https://en.wikipedia.org/wiki/Shunting_yard_algorithm
 https://aquarchitect.github.io/swift-algorithm-club/Shunting%20Yard/
+
+
+missing 
+* nested expressions
+* cyclic dependency detector 
