@@ -34,3 +34,28 @@ func TestStack(t *testing.T) {
 		assert.Equal(t, 123, v)
 	})
 }
+
+func TestInfixConverter(t *testing.T) {
+	testCases := []struct {
+		input string
+		exp string
+	}{
+		{"=a1+b1*c1", "= a1 b1 c1 * +"},
+		{"=4+4*2*(1-5)", "= 4 4 2 * 1 5 - * +"},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.input, func(t *testing.T) {
+			postfix := convertInfix(parseExpression(expressionCell{tC.input}))
+
+			got := ""
+			for i,v := range postfix {
+				got += v.val
+				if i != len(postfix)-1 {
+					got += " "
+				}
+			}
+
+			assert.Equal(t, tC.exp, got)
+		})
+	}
+}

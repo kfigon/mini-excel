@@ -31,6 +31,14 @@ func (t tokenType) String() string {
 		"coord"}[t]
 }
 
+func (t tokenType) isOperator() bool {
+	return t == plus || t == minus || t == multiply || t == equal || t == openParent || t == closeParent
+}
+
+func (t tokenType) isOperand() bool {
+	return t == number || t == coord
+}
+
 type token struct {
 	tokType tokenType
 	val     string
@@ -66,6 +74,11 @@ func parseExpression(ex expressionCell) []token {
 				i++
 			}
 			
+			// error!
+			if str == "" {
+				i++
+			}
+
 			if _, err := strconv.Atoi(str); err == nil {
 				out = append(out, token{number, str})
 			} else if _, ok := parseCoords(str); ok {

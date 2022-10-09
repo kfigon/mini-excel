@@ -20,3 +20,7 @@ A,B,C,D,E
 1,2,3,4,5
 3,,3,6,
 ```
+
+expressions are evaluated using modified shunting yard algorithm
+https://en.wikipedia.org/wiki/Shunting_yard_algorithm
+https://aquarchitect.github.io/swift-algorithm-club/Shunting%20Yard/
