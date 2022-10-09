@@ -49,7 +49,7 @@ func convertInfix(tokens []token) []token {
 		} else if cur.tokType.isOperator() {
 
 			if cur.tokType == openParent {
-				out = append(out, cur)
+				stak.push(cur)
 			} else if cur.tokType == closeParent {
 				for {
 					v, ok := stak.pop()
@@ -65,10 +65,17 @@ func convertInfix(tokens []token) []token {
 				} else {
 					for {
 						top, ok := stak.pop()
-						if !ok || cur.tokType.predescence() > top.tokType.predescence() {
+						if !ok {
 							break
 						}
-						out = append(out, top)
+
+						if top.tokType.predescence() > cur.tokType.predescence() {
+							out = append(out, top)
+						} else {
+							stak.push(top) // get back that popped one
+							stak.push(cur)
+							break
+						}
 					}
 				}
 			}

@@ -59,7 +59,7 @@ func TestInfixConverter(t *testing.T) {
 		{"=1+2", "= 1 2 +"},
 		{"=a1+b1*c1", "= a1 b1 c1 * +"},
 		{"=4+4*2*(1-5)", "= 4 4 2 * 1 5 - * +"},
-		{"=1 + (2*3-1)-2", "= 4 4 2 * 1 5 - * +"},
+		{"=1 + (2*3-1)-2", "= 1 2 3 * 1 - + 2 -"},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {
