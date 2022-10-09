@@ -32,14 +32,20 @@ func (t tokenType) String() string {
 }
 
 func (t tokenType) predescence() int {
-	pres := map[tokenType]int {
-		closeParent: 3, // immidiate
-		multiply: 2, // */%
-		plus: 1,
-		minus: 1, // low
-		openParent: 0,
+	// parenthesis moved to converter
+	// pres := map[tokenType]int {
+		// closeParent: 3, // immidiate
+		// multiply: 2, // */%
+		// plus: 1,
+		// minus: 1, // low
+		// openParent: 0, // wild
+	// }
+	if t == multiply {
+		return 2
+	} else if t == plus || t == minus {
+		return 1
 	}
-	return pres[t]
+	return 0
 }
 
 func (t tokenType) isOperator() bool {

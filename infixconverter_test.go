@@ -33,6 +33,22 @@ func TestStack(t *testing.T) {
 		assert.True(t, ok)
 		assert.Equal(t, 123, v)
 	})
+
+	t.Run("peek", func(t *testing.T) {
+		s.push(1)
+		s.push(2)
+
+		v, ok := s.peek()
+		assert.True(t, ok)
+		assert.Equal(t, 2, v)
+
+		v, _ = s.pop()
+		assert.Equal(t,2,v)
+		v, _ = s.pop()
+		assert.Equal(t,1,v)
+		_, ok = s.pop()
+		assert.False(t, ok)
+	})
 }
 
 func TestInfixConverter(t *testing.T) {
@@ -40,8 +56,10 @@ func TestInfixConverter(t *testing.T) {
 		input string
 		exp string
 	}{
+		{"=1+2", "= 1 2 +"},
 		{"=a1+b1*c1", "= a1 b1 c1 * +"},
 		{"=4+4*2*(1-5)", "= 4 4 2 * 1 5 - * +"},
+		{"=1 + (2*3-1)-2", "= 4 4 2 * 1 5 - * +"},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.input, func(t *testing.T) {

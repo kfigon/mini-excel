@@ -29,6 +29,60 @@ func (s *stack[T]) empty() bool {
 	return len(s.tab) == 0
 }
 
+func (s *stack[T]) peek() (T, bool) {
+	if s.empty() {
+		var out T
+		return out, false
+	}
+	out := s.tab[len(s.tab)-1]
+	return out, true
+}
+
 func convertInfix(tokens []token) []token {
-	return tokens
+	out := []token{}
+	stak := newStack[token]()
+
+	for _, cur := range tokens {
+
+		if cur.tokType.isOperand() || cur.tokType == equal {
+			out = append(out, cur)
+		} else if cur.tokType.isOperator() {
+
+			if cur.tokType == openParent {
+				out = append(out, cur)
+			} else if cur.tokType == closeParent {
+				for {
+					v, ok := stak.pop()
+					if !ok || v.tokType == openParent {
+						break
+					}
+					out = append(out, v)
+				}
+			} else {
+				top, ok := stak.peek()
+				if !ok || cur.tokType.predescence() > top.tokType.predescence(){
+					stak.push(cur)
+				} else {
+					for {
+						top, ok := stak.pop()
+						if !ok || cur.tokType.predescence() > top.tokType.predescence() {
+							break
+						}
+						out = append(out, top)
+					}
+				}
+			}
+		}
+	}
+
+
+	for {
+		v, ok := stak.pop()
+		if !ok {
+			break
+		}
+		out = append(out, v)
+	}
+
+	return out
 }
